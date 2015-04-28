@@ -18,7 +18,9 @@ hashFunc::~hashFunc()
 {
     //dtor
 }
-
+//isPrime determines whether a number passed in is prime
+//Preconditions: must have an integer passed in as an argument
+//Postcondition: returns a bool that is true if the integer is prime, false if not
 bool hashFunc::isPrime(int dataSize) {
     bool isPrime = true;
 
@@ -32,6 +34,10 @@ bool hashFunc::isPrime(int dataSize) {
     return isPrime;
 }
 
+//findSize determines the best size of the hash table, given the number of objects passed in from the file.
+//Precondition: a file must have been read in, and a vector must have been created that stores the values of each item.
+//The function takes the size of the vector as the argument.
+//Postcondition: compares the closest primes to the size, both above and below, and then returns the prime integer that is closest to the size.
 int hashFunc::findSize(int dataSize) {
     int smallerPrime;
     int largerPrime;
@@ -54,6 +60,9 @@ int hashFunc::findSize(int dataSize) {
     } else return smallerPrime;
 }
 
+//hashSum uses the Division method (outlined in Cormen text) to generate a hash index
+//Precondition: file of objects must have been read in, and the size of the table needs to have been determined.
+//Postcondition: converts object name to an integer index.
 int hashFunc::hashSum(string hashObj, int tableSize) {
     int sum = 0;
 
@@ -65,6 +74,9 @@ int hashFunc::hashSum(string hashObj, int tableSize) {
     return sum;
 }
 
+//hashSum uses the Multiplication method (outlined in Cormen text) to generate a hash index
+//Precondition: file of objects must have been read in, and the size of the table needs to have been determined.
+//Postcondition: converts object name to an integer index.
 int hashFunc::hashMult(string hashObj, int tableSize) {
     float sum = 0;
 
@@ -79,15 +91,10 @@ int hashFunc::hashMult(string hashObj, int tableSize) {
     return sum;
 }
 
-void hashFunc::insertNewObj(string objID) {
-    hashedObject *newObj = new hashedObject;
-    newObj->objName = objID;
-    newObj->right = NULL;
-    newObj->left = NULL;
-    newObj->parent = NULL;
-    hashingObjects.push_back(newObj);
-}
-
+//hashSum uses the DJB Method (developed by Prof. Daniel Bernstein, purportedly one of the more efficient hashing functions generated)
+// to generate a hash index
+//Precondition: file of objects must have been read in, and the size of the table needs to have been determined.
+//Postcondition: converts object name to an integer index.
 int hashFunc::hashDJB(string objID, int tableSize) {
     int c, i, h;
 
@@ -99,6 +106,9 @@ int hashFunc::hashDJB(string objID, int tableSize) {
     return abs(h % tableSize);
 }
 
+//hashSum uses the SDBM method (a basic database manager hashing method) to generate a hash index
+//Precondition: file of objects must have been read in, and the size of the table needs to have been determined.
+//Postcondition: converts object name to an integer index.
 int hashFunc::hashSDBM(string objID, int tableSize) {
     int h = 0;
 
@@ -108,7 +118,10 @@ int hashFunc::hashSDBM(string objID, int tableSize) {
 
     return abs(h % tableSize);
 }
-
+//hashSum uses the  loseLose method (a very simple hashing method, but does not always yield the best distribution of indices, found in 1st edition of The C Programming Language)
+//to generate a hash index
+//Precondition: file of objects must have been read in, and the size of the table needs to have been determined.
+//Postcondition: converts object name to an integer index.
 int hashFunc::loseLose(string objID, int tableSize) {
    int hashVal = 0;
 
@@ -119,6 +132,9 @@ int hashFunc::loseLose(string objID, int tableSize) {
    return abs(hashVal % tableSize);
 }
 
+//getRange gets the range of hash code IDs
+//Precondition: the hashing function must have already been run on the data, and the inddices stored in a vector
+//Postcondition: the range and indices are not changed, simply displayed.
 void hashFunc::getRange(vector<int>hashIDs) {
     int minIndex = hashIDs.size();
     int maxIndex = 0;
@@ -141,6 +157,9 @@ void hashFunc::getRange(vector<int>hashIDs) {
     cout<<"Range: "<<maxIndex-minIndex<<endl;
 }
 
+//getWorstCollision loops through a vector of indices to find the first most common index, and either returns the number of collisions or the index of the highest collisions
+//Precondition: the hashing function must have already been called and a vector of indices created.
+//Postcondition: returns an int value which is either the higher number of collisions or the index where this happens.
 int hashFunc::getWorstCollision(vector<int> vec, bool isIndex) {
     int indexes[ vec.size() ];
 
@@ -169,6 +188,9 @@ int hashFunc::getWorstCollision(vector<int> vec, bool isIndex) {
     }
 }
 
+//getLoadFactor calculates the average number of objects stored at each index
+//Precondition: the indices must have already been calculated using a hashing function.
+//Postcondition: returns a float that is the load factor for that hash function.
 float hashFunc::getLoadFactor(vector<int> vec) {
     int indexes[ vec.size() ];
 
@@ -192,46 +214,3 @@ float hashFunc::getLoadFactor(vector<int> vec) {
 
     return loadFactor;
 }
-/*void hashFunc::intoTable(hashedObject *ho, string objName) {
-    hashedObject *newNode = new hashedObject;
-    newNode->parent = NULL;
-    newNode->objName = objName;
-    newNode->left = NULL;
-    newNode->right = NULL;
-
-    insertNode(ho, newNode);
-}
-void hashFunc::insertNode(hashedObject *node, hashedObject *child) {
-    if (node == NULL) {
-        node = child;
-    }
-    else if (node->objName.compare(child->objName) < 0) {
-
-        if (node->right == NULL) {
-            node->right = child;
-            child->parent = node;
-        } else {
-            insertNode(node->right, child);
-        }
-    }
-    else if (node->objName.compare(child->objName) > 0) {
-
-        if (node->left == NULL) {
-            node->left = child;
-            child->parent = node;
-        } else {
-            insertNode(node->left, child);
-        }
-    }
-}
-void hashFunc::printTable(hashedObject *node) {
-
-    if (node != NULL) {
-        //if the node passed in is not null, first call the printfunction on the leftChild, then print the node, then call the function on the rightChild
-        printTable(node->left);
-
-        cout << node->objName << endl;
-
-        printTable(node->right);
-    }
-}*/

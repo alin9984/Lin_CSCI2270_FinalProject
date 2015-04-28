@@ -5,12 +5,10 @@
 
 using namespace std;
 
+//create a struct for the objects to be read in from the text file; each has a title and a next pointer
+
 struct hTreeN {
     string title;
-
-    //hTreeN *parent;
-    //hTreeN *leftChild;
-    //hTreeN *rightChild;
     hTreeN *next = NULL;
 
     hTreeN(){};
@@ -22,9 +20,6 @@ struct hTreeN {
 
 class hTree {
     public:
-
-        void insertNode(hTreeN*, hTreeN*);
-        void printTree(hTreeN*);
 
         hTree();
         virtual ~hTree();
