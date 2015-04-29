@@ -64,12 +64,25 @@ int main()
     vector <int> loseLoseIndexes;
 
     int minFunc = 0; //determines which hashing function to use to create the hash table
+    
     //read in the file when the program starts
     string fileName;
-    cout<<"Enter filename of list: ";
-    getline(cin, fileName);
-    ifstream in_stream;
-    in_stream.open(fileName);
+    
+    cout << "Enter file name of list: ";
+    getline( cin, fileName );
+    
+    ifstream in_stream ( fileName );
+    // ask for file name again if file does not open
+    while ( !in_stream.is_open() )
+    {
+        cout << "Error: file failed to open." << endl;
+        cout << "If error persists, try including full file path in file name." << endl << endl;
+        cout << "Re-enter file name of list: ";
+        getline( cin, fileName );
+        
+        in_stream.open( fileName );
+    }
+    
     string hashingObject;
 
     while(!in_stream.eof()) {
