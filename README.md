@@ -15,4 +15,4 @@ Group Members:
 Antonia Lin
 
 Open Issues/Bugs:
-The program currently only allows for input of one file; furthermore, if the user misenters the file name, the program does not handle this and must be restarted to take in the correct file name.
+The program currently only allows for input of one file; furthermore, if the user misenters the file name, the program does not handle this and must be restarted to take in the correct file name. (EDIT: wrong file name issue has been resolved by brkn 8102)
